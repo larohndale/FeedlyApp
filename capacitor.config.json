@@ -1,0 +1,14 @@
+{
+  "appId": "com.enki",
+  "appName": "enki",
+  "bundledWebRuntime": "true",
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {
+  }
+}

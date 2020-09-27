@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreenOriginal } from '@ionic-native/splash-screen/ngx';
+import { StatusBarOriginal } from '@ionic-native/status-bar/ngx';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -12,10 +12,13 @@ import { SignupPage } from '../pages/signup/signup';
 import { FeedPage } from '../pages/feed/feed';
 import { CommentsPage } from '../pages/comments/comments';
 
-import { Camera } from '@ionic-native/camera';
-import { Firebase } from '@ionic-native/firebase';
 
-import firebase from 'firebase';
+// import { AngularFireModule } from '@angular/fire';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+
+import { Camera } from "@ionic-native/camera/ngx";
+import { Firebase } from '@ionic-native/firebase/ngx';
+import { AngularFireModule } from '@angular/fire';
 
 var config = {
   apiKey: "AIzaSyCI0Y3wPkXnucYOH0wUBN1kev7PhFRzy3Y",
@@ -27,10 +30,7 @@ var config = {
   appId: "1:611262924238:web:8880eb5243e4b1be69579f",
   measurementId: "G-8PX4J8CJ85"
 };
-firebase.initializeApp(config);
-firebase.firestore().settings({
-  timestampsInSnapshots: true
-})
+// firebase.initializeApp(config);
 
 @NgModule({
   declarations: [
@@ -43,7 +43,9 @@ firebase.firestore().settings({
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(config),
+    AngularFireStorageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -54,11 +56,11 @@ firebase.firestore().settings({
     CommentsPage
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    Camera,
+    StatusBarOriginal,
+    SplashScreenOriginal,
     Firebase,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    Camera,
+    { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
-export class AppModule {}
+export class AppModule { }

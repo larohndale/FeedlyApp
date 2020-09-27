@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from 'ionic-angular';
+
 import firebase from 'firebase';
+import { UUID } from 'angular2-uuid';
+import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
+import { Firebase } from '@ionic-native/firebase/ngx'
 import moment from 'moment';
 import { LoginPage } from '../login/login';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { HttpClient } from '@angular/common/http';
 import { CommentsPage } from '../comments/comments';
-import { Firebase } from '@ionic-native/firebase'
+import { StorageService } from '../../app/services/filestorage.service';
+import { HttpClient } from '@angular/common/http';
+import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from 'ionic-angular';
+
+// const { Camera } = Plugins;
+
 
 @Component({
   selector: 'page-feed',
@@ -21,7 +27,7 @@ export class FeedPage {
   infiniteEvent: any;
   image: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase, private storageSrv: StorageService, private camera: Camera) {
     this.getPosts();
 
     this.firebaseCordova.getToken().then((token) => {
@@ -159,7 +165,7 @@ export class FeedPage {
       }
 
       this.text = "";
-      this.image = undefined;
+      this.image = this.image;
 
       this.toastCtrl.create({
         message: "Your post has been created successfully.",
@@ -198,6 +204,70 @@ export class FeedPage {
 
   }
 
+  // async takePicture() {
+
+  //   await Camera.getPhoto({
+  //     quality: 90,
+  //     allowEditing: true,
+  //     resultType: CameraResultType.Uri
+  //   }).then((url) => {
+  //     const name = UUID.UUID();
+  //     this.makeFileIntoBlob(url, name).then(imageData => {
+  //       this.storageSrv.uploadContent(imageData, name, this.image).then(success => {
+  //         // this.util.closeLoading();
+  //         // this.util.presentToast('image uploded', true, 'bottom', 2100);
+  //         console.log(success);
+  //       }).catch(err => {
+  //         console.log(err);
+  //         // this.util.closeLoading();
+  //         // this.util.presentToast(`${err}`, true, 'bottom', 2100);
+  //       });
+  //     });
+  //   }).catch(err => { console.log(err); });
+  // }
+
+
+  // image.webPath will contain a path that can be set as an image src.
+  // You can access the original file using image.path, which can be
+  // passed to the Filesystem API to read the raw data of the image,
+  // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+  // var imageUrl = image.path;
+  // Can be set to the src of an image now
+  // this.image = imageUrl;
+
+  makeFileIntoBlob(_imagePath, fileName) {
+    return new Promise((resolve, reject) => {
+      window['resolveLocalFileSystemURL'](_imagePath, (fileEntry) => {
+        fileEntry['file']((resFile: any) => {
+          const reader = new FileReader();
+          reader.onload = (evt: any) => {
+            const imgBlob: any = new Blob([evt.target.result], { type: 'image/jpeg' });
+            imgBlob.name = fileName;
+            resolve(imgBlob);
+          };
+          reader.onloadend = (evt: any) => {
+            const imgBlob: any = new Blob([evt.target.result], { type: 'image/jpeg' });
+            imgBlob.name = fileName;
+            resolve(imgBlob);
+          };
+
+          reader.onerror = (e) => {
+
+            reject(e);
+          };
+
+          reader.readAsArrayBuffer(resFile);
+        }, (err: any) => {
+
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject({ message: 'File does not exists.' });
+        });
+      }, (err: any) => {
+        console.log('error');
+      });
+    });
+  }
+
   launchCamera() {
     let options: CameraOptions = {
       quality: 100,
@@ -211,15 +281,30 @@ export class FeedPage {
       allowEdit: true
     }
 
-    this.camera.getPicture(options).then((base64Image) => {
-      console.log(base64Image);
+    this.camera.getPicture(options).then((url) => {
+      const name = UUID.UUID();
+      this.makeFileIntoBlob(url, name).then(imageData => {
+        this.storageSrv.uploadContent(imageData, name, this.image).then(success => {
+          // this.util.closeLoading();
+          // this.util.presentToast('image uploded', true, 'bottom', 2100);
+          console.log(success);
+        }).catch(err => {
+          console.log(err);
+          // this.util.closeLoading();
+          // this.util.presentToast(`${err}`, true, 'bottom', 2100);
+        });
+      });
+    }).catch(err => { console.log(err); });
 
-      this.image = "data:image/png;base64," + base64Image;
+    // .then((base64Image) => {
+    //   console.log(base64Image);
+
+    //   this.image = "data:image/png;base64," + base64Image;
 
 
-    }).catch((err) => {
-      console.log(err)
-    })
+    // }).catch((err) => {
+    //   console.log(err)
+    // })
   }
 
   upload(name: string) {
