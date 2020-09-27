@@ -61,7 +61,8 @@
       <ion-col>
         <button ion-button block icon-left clear small color="danger" class="border-right" (click)="comment(post)">
           <ion-icon name="text"></ion-icon>
-          <small>{{ post.data().commentsCount || 0 }} Comments</small>
+          <small *ngIf="post.data().commentsCount > 0">{{ post.data().commentsCount }} Comments</small>
+          <small *ngIf="post.data().commentsCount > 0">No Comments</small>
         </button>
       </ion-col>
       <ion-col>

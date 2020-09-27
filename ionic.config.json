@@ -1,8 +1,7 @@
 {
-  "name": "Feedly",
-  "type": "ionic-angular",
+  "name": "Enki",
   "integrations": {
     "cordova": {}
   },
-  "app_id": ""
+  "type": "ionic-angular"
 }

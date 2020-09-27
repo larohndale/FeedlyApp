@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController, Modal } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from 'ionic-angular';
 import firebase from 'firebase';
 import moment from 'moment';
 import { LoginPage } from '../login/login';
@@ -37,7 +37,7 @@ export class FeedPage {
   }
 
 
-  updateToken(token: string, uid: string){
+  updateToken(token: string, uid: string) {
 
     firebase.firestore().collection("users").doc(uid).set({
       token: token,
@@ -161,7 +161,7 @@ export class FeedPage {
       this.text = "";
       this.image = undefined;
 
-      let toast = this.toastCtrl.create({
+      this.toastCtrl.create({
         message: "Your post has been created successfully.",
         duration: 3000
       }).present();
@@ -182,7 +182,7 @@ export class FeedPage {
 
     firebase.auth().signOut().then(() => {
 
-      let toast = this.toastCtrl.create({
+      this.toastCtrl.create({
         message: "You have been logged out successfully.",
         duration: 3000
       }).present();
@@ -246,6 +246,7 @@ export class FeedPage {
       }, () => {
         console.log("The upload is complete!");
 
+
         uploadTask.snapshot.ref.getDownloadURL().then((url) => {
 
           firebase.firestore().collection("posts").doc(name).update({
@@ -283,7 +284,8 @@ export class FeedPage {
 
     toast.present();
 
-    this.http.post("https://us-central1-feedlyapp-9df9a.cloudfunctions.net/updateLikesCount", JSON.stringify(body), {
+
+    this.http.post("https://us-central1-enkichat-5f9cf.cloudfunctions.net/updateLikesCount", JSON.stringify(body), {
       responseType: "text"
     }).subscribe((data) => {
       console.log(data)
@@ -318,12 +320,12 @@ export class FeedPage {
         {
           text: "New Comment",
           handler: () => {
-            
+
             this.alertCtrl.create({
               title: "New Comment",
               message: "Type your comment",
               inputs: [
-                { 
+                {
                   name: "comment",
                   type: "text"
                 }
@@ -335,8 +337,8 @@ export class FeedPage {
                 {
                   text: "Post",
                   handler: (data) => {
-                    
-                    if(data.comment){
+
+                    if (data.comment) {
 
                       firebase.firestore().collection("comments").add({
                         text: data.comment,

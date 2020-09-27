@@ -31,7 +31,7 @@ const sendNotification = (owner_uid, type) => {
                 else if (type === "new_like") {
                     admin.messaging().sendToDevice(doc.data().token, {
                         data: {
-                            title: "Someone liked your post on Feedly.",
+                            title: "Someone liked your post on Enki Chat.",
                             sound: "default",
                             body: "Tap to Check"
                         }

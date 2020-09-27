@@ -18,12 +18,14 @@ import { Firebase } from '@ionic-native/firebase';
 import firebase from 'firebase';
 
 var config = {
-  apiKey: "AIzaSyDhZKCDPs1ZDLevzdbPTPxVDHAa9vqreBs",
-  authDomain: "feedlyapp-9df9a.firebaseapp.com",
-  databaseURL: "https://feedlyapp-9df9a.firebaseio.com",
-  projectId: "feedlyapp-9df9a",
-  storageBucket: "feedlyapp-9df9a.appspot.com",
-  messagingSenderId: "197049247480"
+  apiKey: "AIzaSyCI0Y3wPkXnucYOH0wUBN1kev7PhFRzy3Y",
+  authDomain: "enkichat-5f9cf.firebaseapp.com",
+  databaseURL: "https://enkichat-5f9cf.firebaseio.com",
+  projectId: "enkichat-5f9cf",
+  storageBucket: "enkichat-5f9cf.appspot.com",
+  messagingSenderId: "611262924238",
+  appId: "1:611262924238:web:8880eb5243e4b1be69579f",
+  measurementId: "G-8PX4J8CJ85"
 };
 firebase.initializeApp(config);
 firebase.firestore().settings({
