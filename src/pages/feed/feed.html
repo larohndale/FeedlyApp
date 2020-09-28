@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar color="danger">
-    <ion-title>Your Feed</ion-title>
+    <ion-title>Feed</ion-title>
 
     <ion-buttons end>
       <button ion-button icon-only clear (click)="logout()">
@@ -30,6 +30,13 @@
 
   <ion-row margin class="rowStyle" *ngIf="image">
     <ion-card class="round-corners">
+      <ion-badge class="badge">
+        <ion-icon
+          name="close"
+          class="close-icon"
+          (click)="openAlert(image)"
+        ></ion-icon>
+      </ion-badge>
       <img [src]="image" class="round-corners">
     </ion-card>
   </ion-row>
@@ -40,14 +47,17 @@
 
 
   <ion-card *ngFor="let post of posts">
+    {{ post.data() | json  }}
 
     <ion-item-divider color="danger">
       {{ post.data().owner_name }} Says
+      {{ post.data().owner}}
     </ion-item-divider>
 
     <ion-item text-wrap>
       {{ post.data().text }}
     </ion-item>
+
 
     <img [src]="post.data().image" *ngIf="post.data().image">
 
@@ -68,6 +78,10 @@
       <ion-col>
         <button ion-button block icon-left clear small color="danger">
           <small>{{ ago(post.data().created.toDate()) }} ago</small>
+        </button>
+        <button *ngIf="userID === post.data().owner" ion-button block icon-left clear small color="danger"
+          (click)="delete(post)">
+          <small>Delete</small>
         </button>
       </ion-col>
     </ion-row>

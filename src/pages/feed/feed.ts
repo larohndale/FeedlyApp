@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from 'ionic-angular';
+import { HttpClient } from '@angular/common/http';
 import firebase from 'firebase';
 import moment from 'moment';
-import { LoginPage } from '../login/login';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { HttpClient } from '@angular/common/http';
-import { CommentsPage } from '../comments/comments';
 import { Firebase } from '@ionic-native/firebase'
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { LoginPage } from '../login/login';
+import { CommentsPage } from '../comments/comments';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { MediaCapture } from '@ionic-native/media-capture/ngx';
+import { Media } from '@ionic-native/media/ngx';
+import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
 @Component({
   selector: 'page-feed',
@@ -20,10 +25,17 @@ export class FeedPage {
   cursor: any;
   infiniteEvent: any;
   image: string;
+  userID: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase) {
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase, private imagePicker: ImagePicker,
+    private mediaCapture: MediaCapture,
+    private file: File,
+    private media: Media,
+    private streamingMedia: StreamingMedia,
+    private photoViewer: PhotoViewer,) {
     this.getPosts();
-
+    this.userID = firebase.auth().currentUser.uid;
     this.firebaseCordova.getToken().then((token) => {
       console.log(token)
 
@@ -67,6 +79,8 @@ export class FeedPage {
     query.onSnapshot((snapshot) => {
       let changedDocs = snapshot.docChanges();
 
+
+
       changedDocs.forEach((change) => {
         if (change.type == "added") {
           // TODO
@@ -76,6 +90,7 @@ export class FeedPage {
           for (let i = 0; i < this.posts.length; i++) {
             if (this.posts[i].id == change.doc.id) {
               this.posts[i] = change.doc;
+              console.log(this.posts)
             }
           }
         }
@@ -163,7 +178,7 @@ export class FeedPage {
 
       this.toastCtrl.create({
         message: "Your post has been created successfully.",
-        duration: 3000
+        duration: 2000
       }).present();
 
       this.getPosts();
@@ -184,7 +199,7 @@ export class FeedPage {
 
       this.toastCtrl.create({
         message: "You have been logged out successfully.",
-        duration: 3000
+        duration: 2000
       }).present();
 
       this.navCtrl.setRoot(LoginPage);
@@ -220,6 +235,30 @@ export class FeedPage {
     }).catch((err) => {
       console.log(err)
     })
+  }
+
+  async openAlert(index: number) {
+    const alert = await this.alertCtrl.create({
+      title: 'Sure want to delete this!!!',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Delete',
+          cssClass: 'secondary',
+          handler: () => {
+            this.delete(index);
+          }
+        }, {
+          text: 'Cancel',
+          handler: () => {
+            console.log('Cancel');
+
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   upload(name: string) {
@@ -293,13 +332,12 @@ export class FeedPage {
       toast.setMessage("Like updated!");
       setTimeout(() => {
         toast.dismiss();
-      }, 3000)
-
+      }, 1500)
     }, (error) => {
-      toast.setMessage("An error has occured. Please try again later.")
-      setTimeout(() => {
-        toast.dismiss();
-      }, 3000)
+      // toast.setMessage("An error has occured. Please try again later.")
+      // setTimeout(() => {
+      //   toast.dismiss();
+      // }, 1500)
       console.log(error)
     })
 
@@ -370,6 +408,26 @@ export class FeedPage {
       ]
     }).present();
 
+  }
+
+  async delete(post) {
+    if (firebase.auth().currentUser.uid === post.data().owner) {
+      let _post = firebase.firestore().collection('posts');
+      try {
+        await _post.doc(post.id).delete();
+        this.toastCtrl.create({
+          message: 'Deleted',
+          duration: 2100
+        }).present();
+        this.getPosts();
+      }
+      catch (err) {
+        this.toastCtrl.create({
+          message: err.message,
+          duration: 2100
+        }).present();
+      }
+    }
   }
 
 }

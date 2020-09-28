@@ -11,7 +11,12 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { FeedPage } from '../pages/feed/feed';
 import { CommentsPage } from '../pages/comments/comments';
-
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { File } from '@ionic-native/File/ngx';
+import { MediaCapture } from '@ionic-native/media-capture/ngx';
+import { Media } from '@ionic-native/media/ngx';
+import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { Camera } from '@ionic-native/camera';
 import { Firebase } from '@ionic-native/firebase';
 
@@ -56,9 +61,15 @@ firebase.firestore().settings({
   providers: [
     StatusBar,
     SplashScreen,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
     Camera,
     Firebase,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+      ImagePicker,
+    MediaCapture,
+    File,
+    Media,
+    StreamingMedia,
+    PhotoViewer
   ]
 })
 export class AppModule {}
