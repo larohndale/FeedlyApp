@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import { FeedPage } from '../feed/feed';
 
 @Component({
   selector: 'page-signup',
   templateUrl: 'signup.html',
+  styleUrls: ['./signup.scss']
 })
 export class SignupPage {
 
@@ -19,7 +20,7 @@ export class SignupPage {
   signup(){
     firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
     .then((data) => {
-      
+
       console.log(data)
 
       let newUser: firebase.User = data.user;

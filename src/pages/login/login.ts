@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
 import { SignupPage } from '../signup/signup';
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import { FeedPage } from '../feed/feed';
 
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html'
+  templateUrl: 'login.html',
+  styleUrls: ['./login.scss']
 })
 export class LoginPage {
 

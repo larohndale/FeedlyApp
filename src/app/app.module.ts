@@ -1,12 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { HttpClientModule } from '@angular/common/http';
 
-import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { FeedPage } from '../pages/feed/feed';
@@ -17,10 +15,13 @@ import { MediaCapture } from '@ionic-native/media-capture/ngx';
 import { Media } from '@ionic-native/media/ngx';
 import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { Camera } from '@ionic-native/camera';
+import { Camera } from '@ionic-native/camera/ngx';
 import { Firebase } from '@ionic-native/firebase';
 
-import firebase from 'firebase';
+import * as firebase from 'firebase';
+import { RouteReuseStrategy } from '@angular/router';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { AppComponent } from './app.component';
 
 var config = {
   apiKey: "AIzaSyCI0Y3wPkXnucYOH0wUBN1kev7PhFRzy3Y",
@@ -39,7 +40,7 @@ firebase.firestore().settings({
 
 @NgModule({
   declarations: [
-    MyApp,
+    AppComponent,
     LoginPage,
     SignupPage,
     FeedPage,
@@ -48,11 +49,10 @@ firebase.firestore().settings({
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot()
   ],
-  bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    AppComponent,
     LoginPage,
     SignupPage,
     FeedPage,
@@ -61,15 +61,17 @@ firebase.firestore().settings({
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
     Camera,
     Firebase,
-      ImagePicker,
+    ImagePicker,
     MediaCapture,
     File,
     Media,
     StreamingMedia,
-    PhotoViewer
-  ]
+    PhotoViewer,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  ],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }

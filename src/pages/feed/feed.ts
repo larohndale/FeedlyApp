@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
-import firebase from 'firebase';
-import moment from 'moment';
-import { Firebase } from '@ionic-native/firebase'
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { LoginPage } from '../login/login';
-import { CommentsPage } from '../comments/comments';
+import { Firebase } from '@ionic-native/firebase/ngx'
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { MediaCapture } from '@ionic-native/media-capture/ngx';
 import { Media } from '@ionic-native/media/ngx';
 import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { LoginPage } from '../login/login';
+import { CommentsPage } from '../comments/comments';
+import * as firebase from 'firebase';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-feed',
-  templateUrl: 'feed.html',
+  templateUrl: './feed.html',
+  styleUrls: ['./feed.scss'],
 })
 export class FeedPage {
 
@@ -33,7 +34,7 @@ export class FeedPage {
     private file: File,
     private media: Media,
     private streamingMedia: StreamingMedia,
-    private photoViewer: PhotoViewer,) {
+    private photoViewer: PhotoViewer) {
     this.getPosts();
     this.userID = firebase.auth().currentUser.uid;
     this.firebaseCordova.getToken().then((token) => {
@@ -237,7 +238,7 @@ export class FeedPage {
     })
   }
 
-  async openAlert(index: number) {
+  async openAlert() {
     const alert = await this.alertCtrl.create({
       title: 'Sure want to delete this!!!',
       enableBackdropDismiss: false,
@@ -246,7 +247,8 @@ export class FeedPage {
           text: 'Delete',
           cssClass: 'secondary',
           handler: () => {
-            this.delete(index);
+            // this.delete(index);
+            this.image = '';
           }
         }, {
           text: 'Cancel',
@@ -317,11 +319,11 @@ export class FeedPage {
       action: post.data().likes && post.data().likes[firebase.auth().currentUser.uid] == true ? "unlike" : "like"
     }
 
-    let toast = this.toastCtrl.create({
-      message: "Updating like... Please wait."
-    });
+    // // let toast = this.toastCtrl.create({
+    // //   message: "Updating like... Please wait."
+    // // });
 
-    toast.present();
+    // toast.present();
 
 
     this.http.post("https://us-central1-enkichat-5f9cf.cloudfunctions.net/updateLikesCount", JSON.stringify(body), {
@@ -329,10 +331,10 @@ export class FeedPage {
     }).subscribe((data) => {
       console.log(data)
 
-      toast.setMessage("Like updated!");
-      setTimeout(() => {
-        toast.dismiss();
-      }, 1500)
+      // toast.setMessage("Like updated!");
+      // setTimeout(() => {
+      //   toast.dismiss();
+      // }, 1500)
     }, (error) => {
       // toast.setMessage("An error has occured. Please try again later.")
       // setTimeout(() => {

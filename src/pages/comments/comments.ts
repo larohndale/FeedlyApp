@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
-import firebase from 'firebase';
-import moment from 'moment';
+import * as firebase from 'firebase';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-comments',

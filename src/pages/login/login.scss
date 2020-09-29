@@ -2,13 +2,13 @@ page-login {
 
     ion-content {
         .scroll-content {
-            background-color: map-get($colors, danger )
+            background-color: var(--ion-color-primary)
         }
     }
 
-    .item {
-        background-color: map-get($colors, danger )
-    }
+    // .item {
+    //     background-color: map-get($colors, danger )
+    // }
 
     .logo{
         font-size: 25vh;
