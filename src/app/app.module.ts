@@ -61,10 +61,10 @@ firebase.firestore().settings({
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     Camera,
     Firebase,
-      ImagePicker,
+    ImagePicker,
     MediaCapture,
     File,
     Media,
@@ -72,4 +72,4 @@ firebase.firestore().settings({
     PhotoViewer
   ]
 })
-export class AppModule {}
+export class AppModule { }

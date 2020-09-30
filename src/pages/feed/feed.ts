@@ -7,12 +7,6 @@ import { Firebase } from '@ionic-native/firebase'
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { LoginPage } from '../login/login';
 import { CommentsPage } from '../comments/comments';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import { MediaCapture } from '@ionic-native/media-capture/ngx';
-import { Media } from '@ionic-native/media/ngx';
-import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
-import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-
 @Component({
   selector: 'page-feed',
   templateUrl: 'feed.html',
@@ -28,12 +22,7 @@ export class FeedPage {
   userID: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase, private imagePicker: ImagePicker,
-    private mediaCapture: MediaCapture,
-    private file: File,
-    private media: Media,
-    private streamingMedia: StreamingMedia,
-    private photoViewer: PhotoViewer,) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase) {
     this.getPosts();
     this.userID = firebase.auth().currentUser.uid;
     this.firebaseCordova.getToken().then((token) => {
