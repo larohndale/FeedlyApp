@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'page-comments',
+  selector: 'app-comments',
   templateUrl: 'comments.html',
+  styleUrls: ['comments.scss']
 })
 export class CommentsPage {
 
   post: any = {};
   comments : any[] = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ModalController) {
 
     this.post = this.navParams.get("post");
     console.log(this.post)

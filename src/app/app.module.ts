@@ -1,77 +1,45 @@
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouteReuseStrategy } from '@angular/router';
+
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-
+import { AngularFireModule } from "@angular/fire";
+import { SplashScreen } from "@ionic-native/splash-screen/ngx";
+import { StatusBar } from "@ionic-native/status-bar/ngx";
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { environment } from 'src/environments/environment';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { HttpClientModule } from '@angular/common/http';
-
+import { MediaCapture } from '@ionic-native/media-capture/ngx';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { FeedPage } from '../pages/feed/feed';
 import { CommentsPage } from '../pages/comments/comments';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import { File } from '@ionic-native/File/ngx';
-import { MediaCapture } from '@ionic-native/media-capture/ngx';
-import { Media } from '@ionic-native/media/ngx';
-import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
-import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { Camera } from '@ionic-native/camera/ngx';
-import { Firebase } from '@ionic-native/firebase';
-
-import * as firebase from 'firebase';
-import { RouteReuseStrategy } from '@angular/router';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { AppComponent } from './app.component';
-
-var config = {
-  apiKey: "AIzaSyCI0Y3wPkXnucYOH0wUBN1kev7PhFRzy3Y",
-  authDomain: "enkichat-5f9cf.firebaseapp.com",
-  databaseURL: "https://enkichat-5f9cf.firebaseio.com",
-  projectId: "enkichat-5f9cf",
-  storageBucket: "enkichat-5f9cf.appspot.com",
-  messagingSenderId: "611262924238",
-  appId: "1:611262924238:web:8880eb5243e4b1be69579f",
-  measurementId: "G-8PX4J8CJ85"
-};
-firebase.initializeApp(config);
-firebase.firestore().settings({
-  timestampsInSnapshots: true
-})
 
 @NgModule({
-  declarations: [
-    AppComponent,
+  declarations: [AppComponent,
     LoginPage,
     SignupPage,
     FeedPage,
-    CommentsPage
-  ],
+    CommentsPage],
+  entryComponents: [AppComponent,
+    LoginPage,
+    SignupPage,
+    FeedPage,
+    CommentsPage],
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot()
-  ],
-  entryComponents: [
-    AppComponent,
-    LoginPage,
-    SignupPage,
-    FeedPage,
-    CommentsPage
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    Camera,
-    Firebase,
-    ImagePicker,
-    MediaCapture,
-    File,
-    Media,
-    StreamingMedia,
-    PhotoViewer,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-  ],
+    AngularFireModule,
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    IonicModule.forRoot(),
+    AppRoutingModule],
+  providers: [StatusBar, SplashScreen,  { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

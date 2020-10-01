@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { NavParams, ToastController, AlertController } from '@ionic/angular';
 import * as firebase from 'firebase';
-import { FeedPage } from '../feed/feed';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'page-signup',
@@ -14,51 +14,51 @@ export class SignupPage {
   email: string = "";
   password: string = "";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController) {
+  constructor(public router: Router, public navParams: NavParams, public toastCtrl: ToastController, public alertCtrl: AlertController) {
   }
 
-  signup(){
+  signup() {
     firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-    .then((data) => {
+      .then((data) => {
 
-      console.log(data)
+        console.log(data)
 
-      let newUser: firebase.User = data.user;
-      newUser.updateProfile({
-        displayName: this.name,
-        photoURL: ""
-      }).then(() => {
-        console.log("Profile Updated")
+        let newUser: firebase.User = data.user;
+        newUser.updateProfile({
+          displayName: this.name,
+          photoURL: ""
+        }).then(() => {
+          console.log("Profile Updated")
 
-        this.alertCtrl.create({
-          title: "Account Created",
-          message: "Your account has been created successfully.",
-          buttons: [
-            {
-              text: "OK",
-              handler: () => {
-                //Navigate to the feeds page
-                this.navCtrl.setRoot(FeedPage)
+          this.alertCtrl.create({
+            header: "Account Created",
+            message: "Your account has been created successfully.",
+            buttons: [
+              {
+                text: "OK",
+                handler: () => {
+                  //Navigate to the feeds page
+                  this.router.navigateByUrl('/tabs1/feed')
+                }
               }
-            }
-          ]
-        }).present();
+            ]
+          })
+
+        }).catch((err) => {
+          console.log(err)
+        })
 
       }).catch((err) => {
         console.log(err)
+        this.toastCtrl.create({
+          message: err.message,
+          duration: 3000
+        })
       })
-
-    }).catch((err) => {
-      console.log(err)
-      this.toastCtrl.create({
-        message: err.message,
-        duration: 3000
-      }).present();
-    })
   }
 
-  goBack(){
-    this.navCtrl.pop();
+  goBack() {
+    this.router.navigate(['/login'])
   }
 
 }

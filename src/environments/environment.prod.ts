@@ -4,6 +4,16 @@
 
 export const environment = {
   production: true,
+  firebaseConfig: {
+    apiKey: "AIzaSyCI0Y3wPkXnucYOH0wUBN1kev7PhFRzy3Y",
+    authDomain: "enkichat-5f9cf.firebaseapp.com",
+    databaseURL: "https://enkichat-5f9cf.firebaseio.com",
+    projectId: "enkichat-5f9cf",
+    storageBucket: "enkichat-5f9cf.appspot.com",
+    messagingSenderId: "611262924238",
+    appId: "1:611262924238:web:8880eb5243e4b1be69579f",
+    measurementId: "G-8PX4J8CJ85"
+  }
   };
 
 /*

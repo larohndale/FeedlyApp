@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavParams } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 /**
  * Generated class for the Tab1Page page.
@@ -8,14 +9,14 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
-  selector: 'page-tab1',
+  selector: 'app-tab1',
   templateUrl: 'tab1.html',
+  styleUrls: ['tab1.scss']
 })
 export class Tab1Page {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public router: Router, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {

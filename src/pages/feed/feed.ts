@@ -1,14 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController, ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Firebase } from '@ionic-native/firebase/ngx'
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { ImagePicker } from '@ionic-native/image-picker/ngx';
-import { MediaCapture } from '@ionic-native/media-capture/ngx';
-import { Media } from '@ionic-native/media/ngx';
-import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
-import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-import { LoginPage } from '../login/login';
 import { CommentsPage } from '../comments/comments';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
@@ -29,12 +23,7 @@ export class FeedPage {
   userID: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase, private imagePicker: ImagePicker,
-    private mediaCapture: MediaCapture,
-    private file: File,
-    private media: Media,
-    private streamingMedia: StreamingMedia,
-    private photoViewer: PhotoViewer) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController, private camera: Camera, private http: HttpClient, private actionSheetCtrl: ActionSheetController, private alertCtrl: AlertController, private modalCtrl: ModalController, private firebaseCordova: Firebase) {
     this.getPosts();
     this.userID = firebase.auth().currentUser.uid;
     this.firebaseCordova.getToken().then((token) => {
@@ -69,11 +58,11 @@ export class FeedPage {
 
     this.posts = [];
 
-    let loading = this.loadingCtrl.create({
-      content: "Loading Feed..."
-    });
+    // let loading = this.loadingCtrl.create({
+    //   content: "Loading Feed..."
+    // });
 
-    loading.present();
+    // loading.present();
 
     let query = firebase.firestore().collection("posts").orderBy("created", "desc").limit(this.pageSize);
 
@@ -109,7 +98,7 @@ export class FeedPage {
           this.posts.push(doc);
         })
 
-        loading.dismiss();
+        // loading.dismiss();
 
         this.cursor = this.posts[this.posts.length - 1];
 
@@ -177,10 +166,10 @@ export class FeedPage {
       this.text = "";
       this.image = undefined;
 
-      this.toastCtrl.create({
-        message: "Your post has been created successfully.",
-        duration: 2000
-      }).present();
+      // this.toastCtrl.create({
+      //   message: "Your post has been created successfully.",
+      //   duration: 2000
+      // }).present();
 
       this.getPosts();
     }).catch((err) => {
@@ -198,12 +187,12 @@ export class FeedPage {
 
     firebase.auth().signOut().then(() => {
 
-      this.toastCtrl.create({
-        message: "You have been logged out successfully.",
-        duration: 2000
-      }).present();
+      // this.toastCtrl.create({
+      //   message: "You have been logged out successfully.",
+      //   duration: 2000
+      // }).present();
 
-      this.navCtrl.setRoot(LoginPage);
+      this.navCtrl.navigateRoot('/login');
     });
 
   }
@@ -240,8 +229,8 @@ export class FeedPage {
 
   async openAlert() {
     const alert = await this.alertCtrl.create({
-      title: 'Sure want to delete this!!!',
-      enableBackdropDismiss: false,
+      header: 'Sure want to delete this!!!',
+      backdropDismiss: false,
       buttons: [
         {
           text: 'Delete',
@@ -267,11 +256,11 @@ export class FeedPage {
 
     return new Promise((resolve, reject) => {
 
-      let loading = this.loadingCtrl.create({
-        content: "Uploading Image..."
-      })
+      // let loading = this.loadingCtrl.create({
+      //   content: "Uploading Image..."
+      // })
 
-      loading.present();
+      // loading.present();
 
       let ref = firebase.storage().ref("postImages/" + name);
 
@@ -279,8 +268,8 @@ export class FeedPage {
 
       uploadTask.on("state_changed", (taskSnapshot: any) => {
         console.log(taskSnapshot)
-        let percentage = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
-        loading.setContent("Uploaded " + percentage + "% ...")
+        // let percentage = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
+        // loading.setContent("Uploaded " + percentage + "% ...")
 
       }, (error) => {
         console.log(error)
@@ -293,15 +282,15 @@ export class FeedPage {
           firebase.firestore().collection("posts").doc(name).update({
             image: url
           }).then(() => {
-            loading.dismiss()
+            // loading.dismiss()
             resolve()
           }).catch((err) => {
-            loading.dismiss()
+            // loading.dismiss()
             reject()
           })
 
         }).catch((err) => {
-          loading.dismiss()
+          // loading.dismiss()
           reject()
         })
 
@@ -352,9 +341,11 @@ export class FeedPage {
         {
           text: "View All Comments",
           handler: () => {
-            this.modalCtrl.create(CommentsPage, {
-              "post": post
-            }).present();
+            this.modalCtrl.create({
+              component: CommentsPage, componentProps: {
+                "post": post
+              }
+            })
           }
         },
         {
@@ -362,7 +353,7 @@ export class FeedPage {
           handler: () => {
 
             this.alertCtrl.create({
-              title: "New Comment",
+              header: "New Comment",
               message: "Type your comment",
               inputs: [
                 {
@@ -390,12 +381,12 @@ export class FeedPage {
                         this.toastCtrl.create({
                           message: "Comment posted successfully.",
                           duration: 3000
-                        }).present();
+                        })
                       }).catch((err) => {
                         this.toastCtrl.create({
                           message: err.message,
                           duration: 3000
-                        }).present();
+                        })
                       })
 
                     }
@@ -403,12 +394,12 @@ export class FeedPage {
                   }
                 }
               ]
-            }).present();
+            })
 
           }
         }
       ]
-    }).present();
+    })
 
   }
 
@@ -420,14 +411,14 @@ export class FeedPage {
         this.toastCtrl.create({
           message: 'Deleted',
           duration: 2100
-        }).present();
+        })
         this.getPosts();
       }
       catch (err) {
         this.toastCtrl.create({
           message: err.message,
           duration: 2100
-        }).present();
+        })
       }
     }
   }
