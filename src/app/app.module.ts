@@ -43,7 +43,7 @@ firebase.firestore().settings({
     LoginPage,
     SignupPage,
     FeedPage,
-    CommentsPage
+    CommentsPage,
   ],
   imports: [
     BrowserModule,
